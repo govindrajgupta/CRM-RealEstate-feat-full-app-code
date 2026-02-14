@@ -17,7 +17,9 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ["http://localhost:3000"], // Next.js frontend
+  origin: process.env.NODE_ENV === 'production'
+    ? true // Allow same-origin requests via Nginx proxy
+    : ["http://localhost:3000"], // Next.js frontend in dev
   credentials: true, // Allow cookies
 }));
 app.use(express.json());
