@@ -145,8 +145,8 @@ export default function MeetingsPage() {
       setCreating(true);
       await meetingsApi.create({
         title: formData.title,
-        description: formData.description || null,
-        location: formData.location || null,
+        description: formData.description || undefined,
+        location: formData.location || undefined,
         startTime: new Date(formData.startTime).toISOString(),
         endTime: new Date(formData.endTime).toISOString(),
         attendeeIds: formData.attendeeIds,
@@ -462,21 +462,19 @@ export default function MeetingsPage() {
       {/* Tabs */}
       <div className="flex gap-2 border-b">
         <button
-          className={`px-4 py-2 -mb-px ${
-            activeTab === "calendar"
-              ? "border-b-2 border-blue-600 font-medium text-blue-600"
-              : "text-gray-600 hover:text-gray-900"
-          }`}
+          className={`px-4 py-2 -mb-px ${activeTab === "calendar"
+            ? "border-b-2 border-blue-600 font-medium text-blue-600"
+            : "text-gray-600 hover:text-gray-900"
+            }`}
           onClick={() => setActiveTab("calendar")}
         >
           Calendar
         </button>
         <button
-          className={`px-4 py-2 -mb-px flex items-center gap-2 ${
-            activeTab === "invites"
-              ? "border-b-2 border-blue-600 font-medium text-blue-600"
-              : "text-gray-600 hover:text-gray-900"
-          }`}
+          className={`px-4 py-2 -mb-px flex items-center gap-2 ${activeTab === "invites"
+            ? "border-b-2 border-blue-600 font-medium text-blue-600"
+            : "text-gray-600 hover:text-gray-900"
+            }`}
           onClick={() => setActiveTab("invites")}
         >
           Invitations
@@ -520,7 +518,7 @@ export default function MeetingsPage() {
                       <Button
                         size="sm"
                         onClick={() =>
-                          handleRespondToInvite(invite.meetingId, "ACCEPTED")
+                          handleRespondToInvite(invite.meeting.id, "ACCEPTED")
                         }
                         className="bg-green-600 hover:bg-green-700"
                       >
@@ -530,7 +528,7 @@ export default function MeetingsPage() {
                         size="sm"
                         variant="outline"
                         onClick={() =>
-                          handleRespondToInvite(invite.meetingId, "DECLINED")
+                          handleRespondToInvite(invite.meeting.id, "DECLINED")
                         }
                         className="text-red-600 border-red-300 hover:bg-red-50"
                       >
@@ -602,14 +600,12 @@ export default function MeetingsPage() {
                   return (
                     <div
                       key={day}
-                      className={`min-h-24 p-1 border ${
-                        isToday ? "bg-blue-50 border-blue-300" : ""
-                      }`}
+                      className={`min-h-24 p-1 border ${isToday ? "bg-blue-50 border-blue-300" : ""
+                        }`}
                     >
                       <div
-                        className={`text-sm font-medium mb-1 ${
-                          isToday ? "text-blue-600" : ""
-                        }`}
+                        className={`text-sm font-medium mb-1 ${isToday ? "text-blue-600" : ""
+                          }`}
                       >
                         {day}
                       </div>
@@ -726,19 +722,19 @@ export default function MeetingsPage() {
                           Organizer: {meeting.organizer.fullName}
                         </div>
                       </div>
-                      
+
                       {(currentUser?.id === meeting.organizerId ||
                         currentUser?.role === "ADMIN" ||
                         currentUser?.role === "MANAGER") && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteMeeting(meeting.id)}
-                          className="text-red-600 hover:text-red-800 hover:bg-red-50"
-                        >
-                          🗑️
-                        </Button>
-                      )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteMeeting(meeting.id)}
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                          >
+                            🗑️
+                          </Button>
+                        )}
                     </div>
                   ))}
                 </div>

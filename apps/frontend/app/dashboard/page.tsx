@@ -35,7 +35,7 @@ export default function DashboardPage() {
     }).catch(console.error);
     propertiesApi.list().then((data) => {
       setTotalProperties(data.length);
-      const active = data.filter((p) => p.status === "ACTIVE").length;
+      const active = data.filter((p) => p.listingStatus === "ACTIVE").length;
       setActiveProperties(active);
     }).catch(console.error);
   }, []);
@@ -250,8 +250,8 @@ export default function DashboardPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <Button 
-                    onClick={handleCreateTask} 
+                  <Button
+                    onClick={handleCreateTask}
                     className="w-full"
                     disabled={isCreatingTask}
                   >
