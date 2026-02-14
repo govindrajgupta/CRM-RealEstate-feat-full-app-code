@@ -1,5 +1,6 @@
 {
     "version": 2,
+    "installCommand": "cd ../.. && bun install && cd packages/db && bunx prisma generate",
     "builds": [
         {
             "src": "index.ts",
