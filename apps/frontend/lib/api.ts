@@ -1145,6 +1145,56 @@ export const tasks = {
 };
 
 // ================================
+// MEETINGS TYPES
+// ================================
+
+export type MeetingAttendeeStatus = "PENDING" | "ACCEPTED" | "DECLINED";
+
+export type Meeting = {
+  id: string;
+  title: string;
+  description: string | null;
+  location: string | null;
+  meetingUrl: string | null;
+  startTime: string;
+  endTime: string;
+  status: "SCHEDULED" | "COMPLETED" | "CANCELLED";
+  organizerId: string;
+  organizer: {
+    id: string;
+    fullName: string;
+  };
+  lead?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  } | null;
+  googleEventId?: string | null;
+  attendees?: {
+    id: string;
+    status: MeetingAttendeeStatus;
+    user: {
+      id: string;
+      fullName: string;
+    };
+  }[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type MeetingInvite = {
+  id: string;
+  meetingId: string;
+  status: MeetingAttendeeStatus;
+  meeting: Meeting;
+};
+
+export type GoogleCalendarStatus = {
+  connected: boolean;
+  email?: string;
+};
+
+// ================================
 // MEETINGS API
 // ================================
 
