@@ -18,8 +18,8 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
-    ? true // Allow same-origin requests via Nginx proxy
-    : ["http://localhost:3000"], // Next.js frontend in dev
+    ? process.env.FRONTEND_URL || true
+    : ["http://localhost:3000"],
   credentials: true, // Allow cookies
 }));
 app.use(express.json());
@@ -43,7 +43,13 @@ app.get("/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-const PORT = parseInt(process.env.PORT || "3001", 10);
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`API server running on http://localhost:${PORT}`);
-});
+// Export for Vercel serverless
+export default app;
+
+// Only listen when running locally (not on Vercel)
+if (!process.env.VERCEL) {
+  const PORT = parseInt(process.env.PORT || "3001", 10);
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`API server running on http://localhost:${PORT}`);
+  });
+}
