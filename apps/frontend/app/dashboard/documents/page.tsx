@@ -66,7 +66,7 @@ export default function DocumentsPage() {
   const loadData = async () => {
     try {
       setLoading(true);
-      
+
       // Load folders and documents for all users
       // Backend already filters by access permissions
       const [foldersData, docsData] = await Promise.all([
@@ -75,7 +75,7 @@ export default function DocumentsPage() {
       ]);
       setFolderList(foldersData);
       setDocumentList(docsData);
-      
+
       // Load users list if admin
       if (isAdmin) {
         const { users: usersData } = await users.list();
@@ -345,7 +345,7 @@ function UploadDialog({
 
   useEffect(() => {
     setFolderId(currentFolder);
-    
+
     // Smart defaults based on current location
     if (isInPersonalFolder) {
       // Inside PERSONAL folder → force PERSONAL type
@@ -376,7 +376,7 @@ function UploadDialog({
         file,
         name: name || file.name,
         type,
-        folderId,
+        folderId: folderId ?? undefined,
         sharedWithUserIds: type === "SHARED" ? selectedUsers : undefined,
       });
       onOpenChange(false);
@@ -421,7 +421,7 @@ function UploadDialog({
                 placeholder="Leave empty to use filename"
               />
             </div>
-            
+
             {/* Type selection - Only show at root */}
             {isAtRoot && (
               <div>
@@ -437,7 +437,7 @@ function UploadDialog({
                 </Select>
               </div>
             )}
-            
+
             {/* Show folder type info when inside a folder */}
             {!isAtRoot && (
               <div className="border rounded p-2 bg-blue-50 text-sm text-blue-900">
@@ -470,7 +470,7 @@ function UploadDialog({
                 </Select>
               )}
             </div>
-            
+
             {/* User selection - Only show at root for SHARED type OR hide when in shared folder */}
             {type === "SHARED" && isAtRoot && (
               <div>
@@ -494,7 +494,7 @@ function UploadDialog({
                 </div>
               </div>
             )}
-            
+
             {/* Show inherited users when in shared folder */}
             {isInSharedFolder && currentFolderData?.sharedWithUsers && currentFolderData.sharedWithUsers.length > 0 && (
               <div>
@@ -549,7 +549,7 @@ function CreateFolderDialog({
 
   useEffect(() => {
     setParentId(currentFolder);
-    
+
     // Smart defaults based on parent location
     if (isInPersonalFolder) {
       // Inside PERSONAL folder → force PERSONAL type
@@ -574,7 +574,7 @@ function CreateFolderDialog({
       await folders.create({
         name,
         type,
-        parentId,
+        parentId: parentId ?? undefined,
         sharedWithUserIds: type === "SHARED" ? selectedUsers : undefined,
       });
       onOpenChange(false);
@@ -607,7 +607,7 @@ function CreateFolderDialog({
                 required
               />
             </div>
-            
+
             {/* Type selection - Only show at root */}
             {isAtRoot && (
               <div>
@@ -623,7 +623,7 @@ function CreateFolderDialog({
                 </Select>
               </div>
             )}
-            
+
             {/* Show parent folder type info when inside a folder */}
             {!isAtRoot && (
               <div className="border rounded p-2 bg-blue-50 text-sm text-blue-900">
@@ -661,7 +661,7 @@ function CreateFolderDialog({
                 </Select>
               )}
             </div>
-            
+
             {/* User selection - Only show at root for SHARED type */}
             {type === "SHARED" && isAtRoot && (
               <div>
@@ -685,7 +685,7 @@ function CreateFolderDialog({
                 </div>
               </div>
             )}
-            
+
             {/* Show inherited users when creating inside shared folder */}
             {isInSharedFolder && parentFolderData?.sharedWithUsers && parentFolderData.sharedWithUsers.length > 0 && (
               <div>
