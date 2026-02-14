@@ -1184,7 +1184,7 @@ export type Meeting = {
 
 export type MeetingInvite = {
   id: string;
-  meetingId: string;
+  meetingId?: string;
   status: MeetingAttendeeStatus;
   meeting: Meeting;
 };
