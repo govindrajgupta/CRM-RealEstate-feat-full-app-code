@@ -35,10 +35,10 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
 
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-    
+
     const contentType = response.headers.get("content-type");
     const isJson = contentType && contentType.includes("application/json");
-    
+
     if (!isJson) {
       if (!response.ok) {
         console.error(`[API Error] ${method} ${endpoint} - ${response.status} ${response.statusText}`);
@@ -46,15 +46,15 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
       }
       return {} as T;
     }
-    
+
     const data = await response.json();
 
     if (!response.ok) {
       // Don't log expected auth-related errors that occur during normal flow
-      const isExpectedAuthError = 
+      const isExpectedAuthError =
         (endpoint === "/auth/me" && response.status === 401) || // Not logged in check
         (endpoint === "/auth/check-setup"); // Setup check on first visit
-      
+
       if (!isExpectedAuthError) {
         console.error(`[API Error] ${method} ${endpoint}:`, {
           status: response.status,
@@ -62,7 +62,7 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
           details: data.details,
         });
       }
-      
+
       throw new ApiError(
         response.status,
         data.error || response.statusText,
@@ -75,7 +75,7 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
     if (error instanceof ApiError) {
       throw error;
     }
-    
+
     console.error(`[Network Error] ${method} ${endpoint}:`, error);
     throw new ApiError(
       0,
@@ -108,7 +108,7 @@ export type User = {
 
 export type PipelineType = "BUYER" | "SELLER" | "INVESTOR" | "RENTER";
 export type CampaignStatus = "ACTIVE" | "PAUSED" | "COMPLETED";
-export type CampaignSource = 
+export type CampaignSource =
   | "GOOGLE_ADS"
   | "FACEBOOK_ADS"
   | "LINKEDIN_ADS"
@@ -182,7 +182,7 @@ export type Campaign = {
 // ================================
 
 export type LeadType = "BUYER" | "SELLER" | "INVESTOR" | "RENTER";
-export type PropertyType = 
+export type PropertyType =
   | "HOUSE"
   | "CONDO"
   | "TOWNHOUSE"
@@ -262,7 +262,7 @@ export type Lead = {
 // PROPERTY TYPES
 // ================================
 
-export type ListingStatus = 
+export type ListingStatus =
   | "ACTIVE"
   | "PENDING"
   | "SOLD"
@@ -302,7 +302,7 @@ export type Property = {
   updatedAt: string;
 };
 
-export type PropertyInterestStatus = 
+export type PropertyInterestStatus =
   | "INTERESTED"
   | "TOURED"
   | "OFFER_MADE"
@@ -463,6 +463,11 @@ export type Folder = {
     id: string;
     fullName: string;
   };
+  sharedWithUsers?: {
+    id: string;
+    fullName: string;
+    email: string | null;
+  }[];
   createdAt: string;
   updatedAt: string;
 };
@@ -492,7 +497,7 @@ export type ManagedDocument = {
 // ================================
 
 export const auth = {
-  checkSetup: () => 
+  checkSetup: () =>
     request<{ setupRequired: boolean }>("/auth/check-setup"),
 
   setup: (data: { username: string; password: string; fullName: string }) =>
@@ -857,7 +862,7 @@ export const leads = {
   parseImport: async (data: { sourceType: "FILE" | "GOOGLE_SHEETS_URL"; file?: File; url?: string }) => {
     const formData = new FormData();
     formData.append("sourceType", data.sourceType);
-    
+
     if (data.sourceType === "GOOGLE_SHEETS_URL" && data.url) {
       formData.append("url", data.url);
     } else if (data.file) {
